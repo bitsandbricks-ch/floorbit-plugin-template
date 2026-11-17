@@ -15,8 +15,8 @@ In short:
 
 | Part | Where it runs | Can ship |
 | --- | --- | --- |
-| `plugin.yaml` | read before any code | id, version, Floorbit range, `uses:`, settings (secrets are write-only), actions, hooks, endpoints, dashboard tiles, right-click entries, the agent block |
-| `plugin.py` | Floorbit | actions, tiles, endpoints, the Test button, data sources (inventory, monitoring, health, power, DNS, Wi-Fi, logs, ...), what it does with what the agent sends, 64 KB of state |
+| `plugin.yaml` | read before any code | id, version, Floorbit range, `uses:`, settings (secrets are write-only), actions, hooks, endpoints, dashboard tiles, right-click entries, an `icon:` from Floorbit's icon set, side panel boxes (`panels:` for a seat, switch or device), the agent block |
+| `plugin.py` | Floorbit | actions, tiles, endpoints, the Test button, data sources (inventory, monitoring, health, power, DNS, Wi-Fi, logs, ...), side panel boxes (`panel_<id>(target)`), what it does with what the agent sends, 64 KB of state |
 | `agent.py` | the local agent in the hall | collectors (`ctx.send`, each kind marked aggregate or device), listeners, read-only calls, actions the hall allows, device logins with lockout protection, its own health and metrics |
 | `locales/de-CH.json` | with the plugin | German for its texts: `{"English": "Swiss German"}`, `{}` where a value goes; an older Floorbit ignores it |
 | `*.py` helpers, `README.md`, `CHANGELOG.md` | with the part that imports them | helpers for `plugin.py` and `agent.py`; the README and changelog show on the Marketplace |
