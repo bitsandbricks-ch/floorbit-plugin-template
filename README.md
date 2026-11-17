@@ -18,6 +18,7 @@ In short:
 | `plugin.yaml` | read before any code | id, version, Floorbit range, `uses:`, settings (secrets are write-only), actions, hooks, endpoints, dashboard tiles, right-click entries, the agent block |
 | `plugin.py` | Floorbit | actions, tiles, endpoints, the Test button, data sources (inventory, monitoring, health, power, DNS, Wi-Fi, logs, ...), what it does with what the agent sends, 64 KB of state |
 | `agent.py` | the local agent in the hall | collectors (`ctx.send`, each kind marked aggregate or device), listeners, read-only calls, actions the hall allows, device logins with lockout protection, its own health and metrics |
+| `locales/de-CH.json` | with the plugin | German for its texts: `{"English": "Swiss German"}`, `{}` where a value goes; an older Floorbit ignores it |
 | `*.py` helpers, `README.md`, `CHANGELOG.md` | with the part that imports them | helpers for `plugin.py` and `agent.py`; the README and changelog show on the Marketplace |
 
 Never: JavaScript, CSS, HTML or other browser code (Floorbit draws every screen from data), native
@@ -42,6 +43,7 @@ in `agent.py`. Floorbit refuses an unknown key in `plugin.yaml` and a bundle wit
 | `plugin.yaml` | The manifest: settings, what it may touch, what the agent part sends. |
 | `plugin.py` | The part that runs in Floorbit. |
 | `agent.py` | The part that runs on the local agent in the hall. Leave it out if the plugin has none (and `agent` from `uses:`). |
+| `locales/de-CH.json` | German for the plugin's texts. Add every new label, help text and message. |
 | `tests/` | Tests, against Floorbit at the commit in `FLOORBIT_REF`. No network but localhost. |
 | `.github/workflows/release.yml` | Tests every push and pull request; signs and releases a `v*` tag. |
 
