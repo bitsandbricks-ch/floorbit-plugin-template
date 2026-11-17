@@ -8,6 +8,23 @@ their TCP port, sends only how many did, and a dashboard tile shows it. How plug
 Floorbit's [docs/plugins.md](https://github.com/bitsandbricks-ch/floorbit/blob/master/docs/plugins.md)
 and [docs/marketplace.md](https://github.com/bitsandbricks-ch/floorbit/blob/master/docs/marketplace.md).
 
+## What a plugin can ship
+
+The full contract is Floorbit's [docs/plugin-spec.md](https://github.com/bitsandbricks-ch/floorbit/blob/master/docs/plugin-spec.md).
+In short:
+
+| Part | Where it runs | Can ship |
+| --- | --- | --- |
+| `plugin.yaml` | read before any code | id, version, Floorbit range, `uses:`, settings (secrets are write-only), actions, hooks, endpoints, dashboard tiles, right-click entries, the agent block |
+| `plugin.py` | Floorbit | actions, tiles, endpoints, the Test button, data sources (inventory, monitoring, health, power, DNS, Wi-Fi, logs, ...), what it does with what the agent sends, 64 KB of state |
+| `agent.py` | the local agent in the hall | collectors (`ctx.send`, each kind marked aggregate or device), listeners, read-only calls, actions the hall allows, device logins with lockout protection, its own health and metrics |
+| `*.py` helpers, `README.md`, `CHANGELOG.md` | | |
+
+Never: JavaScript, CSS, HTML or other browser code (Floorbit draws every screen from data), native
+code or extra Python packages, its own HTTP routes, database tables, roles or permissions, or env
+variables other than `FLOORBIT_PLUGIN_<ID>_<KEY>`. Anything that talks to the event network goes
+in `agent.py`. Floorbit refuses an unknown key in `plugin.yaml` and a bundle with refused files.
+
 ## A new plugin
 
 1. **Use this template** on GitHub. Name the repository `floorbit-plugin-<id>` in
