@@ -1,3 +1,58 @@
 # Floorbit plugin template
 
-The starting point for a Floorbit plugin.
+[![Test and release](https://github.com/bitsandbricks-ch/floorbit-plugin-template/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/bitsandbricks-ch/floorbit-plugin-template/actions/workflows/release.yml?query=branch%3Amain)
+
+The starting point for an official [Floorbit](https://github.com/bitsandbricks-ch/floorbit) plugin.
+It holds a small working example: the local agent in the hall checks that a few services answer on
+their TCP port, sends only how many did, and a dashboard tile shows it. How plugins work is in
+Floorbit's [docs/plugins.md](https://github.com/bitsandbricks-ch/floorbit/blob/master/docs/plugins.md)
+and [docs/marketplace.md](https://github.com/bitsandbricks-ch/floorbit/blob/master/docs/marketplace.md).
+
+## A new plugin
+
+1. **Use this template** on GitHub. Name the repository `floorbit-plugin-<id>` in
+   bitsandbricks-ch: the Marketplace finds every public `floorbit-plugin-*` repository by itself.
+2. Pick the id (lowercase letters, digits, dashes) and replace `example` with it in `plugin.yaml`,
+   `agent.py` (the thread name) and `tests/`. Give it a name, description and homepage.
+3. Replace the example code with yours, keep only the `uses:` you need, and update this README.
+4. Add the environment `plugin-signing` with the secret `FLOORBIT_PLUGIN_SIGNING_KEY` (the
+   plugin key's PEM), limited to `v*` tags. Nothing else needs it.
+
+## What is where
+
+| File | What |
+| --- | --- |
+| `plugin.yaml` | The manifest: settings, what it may touch, what the agent part sends. |
+| `plugin.py` | The part that runs in Floorbit. |
+| `agent.py` | The part that runs on the local agent in the hall. Leave it out if the plugin has none (and `agent` from `uses:`). |
+| `tests/` | Tests, against Floorbit at the commit in `FLOORBIT_REF`. No network but localhost. |
+| `.github/workflows/release.yml` | Tests every push and pull request; signs and releases a `v*` tag. |
+
+## Testing
+
+```
+git clone https://github.com/bitsandbricks-ch/floorbit ../floorbit
+git -C ../floorbit checkout "$(cat FLOORBIT_REF)"
+pip install -r ../floorbit/requirements.txt pytest ruff
+ruff check --config ../floorbit/pyproject.toml --config 'lint.isort.known-third-party=["floorbit"]' .
+PYTHONPATH=../floorbit python -m pytest -q tests
+```
+
+To try it in a running Floorbit, point `FLOORBIT_DEV_PLUGINS` at a folder holding this checkout
+(never in production).
+
+## Releasing
+
+Put the new version into `plugin.yaml`, add a `## <version>` section to `CHANGELOG.md`, merge, then
+push the tag:
+
+```
+git tag v0.1.0 && git push origin v0.1.0
+```
+
+The [workflow](.github/workflows/release.yml) tests it, signs `<id>-<version>.tar.gz` with the
+Floorbit plugin key and attaches it to the GitHub release. The Marketplace picks it up within the
+hour. A version is withdrawn in [floorbit-plugins](https://github.com/bitsandbricks-ch/floorbit-plugins)'
+`plugins.yaml`, never by deleting the release.
+
+The template itself is never released: it has no tags, so the Marketplace skips it.
