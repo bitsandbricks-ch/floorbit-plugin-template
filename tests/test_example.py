@@ -59,3 +59,28 @@ def test_the_widget_shows_what_the_agent_sent():
     assert plugin.agent_status({"name": "Hall A"}, {"up": 2, "total": 3}) == {"kept": True}
     widget = plugin.widget_summary()
     assert widget["value"] == "2 / 3" and widget["tone"] == "warn" and widget["sub"] == "from Hall A"
+
+
+def test_a_round_that_breaks_does_not_stop_the_checks(monkeypatch):
+    m = load("agent")
+    ctx = MemoryContext("example", {}, {"sends": {}})
+    plugin = m.AgentPlugin(ctx)
+    plugin.interval = 0
+    rounds = []
+
+    def tick():
+        rounds.append(1)
+        if len(rounds) == 1:
+            raise KeyError("surprise")
+        ctx.stopping.set()
+
+    monkeypatch.setattr(plugin, "tick", tick)
+    plugin.loop()
+    assert len(rounds) == 2
+    assert any("a round failed" in e["error"] for e in ctx.health_.report()["errors"])
+
+
+def test_a_name_dns_cannot_take_is_down_not_an_error():
+    m = load("agent")
+    assert m.answers("a" * 300 + ".example.com", 80) is False
+    assert m.answers("bad\0name", 80) is False

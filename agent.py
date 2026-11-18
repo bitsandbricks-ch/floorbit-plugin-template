@@ -22,7 +22,7 @@ def answers(host, port):
     try:
         with socket.create_connection((host, port), timeout=TIMEOUT):
             return True
-    except OSError:
+    except (OSError, ValueError):     # ValueError: a name too long for DNS, or one with a NUL in it
         return False
 
 
@@ -48,10 +48,16 @@ class AgentPlugin(Base):
     def loop(self):
         while not self.ctx.stopping.is_set():
             # Two agents in one hall (VRRP): only the primary checks, so nothing is counted twice.
-            if self.ctx.primary():
-                self.tick()
-            else:
-                self.ctx.health('ok', 'Standby: the primary agent checks the services')
+            # Nothing restarts this thread: an error that left it would stop the checks until the
+            # agent restarts. Say it and try again next round.
+            try:
+                if self.ctx.primary():
+                    self.tick()
+                else:
+                    self.ctx.health('ok', 'Standby: the primary agent checks the services')
+            except Exception as exc:  # noqa: BLE001
+                self.ctx.health('error', f'a round failed: {type(exc).__name__}: {exc}'[:300])
+                self.ctx.error(f'a round failed: {type(exc).__name__}: {exc}')
             self.ctx.stopping.wait(self.interval)
 
     def check(self):
