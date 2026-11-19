@@ -2,6 +2,7 @@
 # settings, and what the agent part may send. Field by field: Floorbit's docs/plugins.md.
 id: example                    # rename: lowercase letters, digits, dashes; the repo is floorbit-plugin-<id>
 name: Example reachability
+icon: network
 version: "0.1.0"
 floorbit: ">=0.1,<2"
 description: "The local agent checks that a few services in the hall answer on their TCP port and the dashboard shows how many do."

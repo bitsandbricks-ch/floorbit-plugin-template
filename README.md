@@ -46,6 +46,8 @@ in `agent.py`. Floorbit refuses an unknown key in `plugin.yaml` and a bundle wit
 | `locales/de-CH.json` | German for the plugin's texts. Add every new label, help text and message. |
 | `tests/` | Tests, against Floorbit at the commit in `FLOORBIT_REF`. No network but localhost. |
 | `.github/workflows/release.yml` | Tests every push and pull request; signs and releases a `v*` tag. |
+| `.mason.toml` | Tells `mason bump` and `mason release tag` that the version lives in `plugin.yaml`. |
+| `.gitattributes` | What stays out of the signed plugin (`export-ignore`): the files for people and agents. |
 
 ## Testing
 
