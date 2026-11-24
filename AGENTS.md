@@ -5,7 +5,8 @@ Humans: the same rules apply to you in spirit.
 `CLAUDE.md` imports this file.
 
 This repo follows the [BitsAndBricks handbook](https://github.com/bitsandbricks-ch/handbook),
-profile **plugin** (see `.mason.toml`). Read its core chapters and the blocks that profile lists.
+profiles **template** and **plugin** (see `.mason.toml`): new plugin repos are made and synced from it,
+and the whole repo is also a working plugin. Read the core chapters and the blocks both profiles list.
 Where this file differs from the handbook, this file wins for this repo.
 
 ## What this is

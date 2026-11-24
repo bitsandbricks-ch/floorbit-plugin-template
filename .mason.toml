@@ -7,7 +7,7 @@
 #
 # Releases are immutable and made by the workflow, so push only the tag.
 [handbook]
-profile = "plugin"
+profile = ["template", "plugin"]  # a template that is itself a working plugin (handbook decision 0011)
 version = "v1"
 
 [release]
