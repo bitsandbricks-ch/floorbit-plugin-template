@@ -64,7 +64,8 @@ To try it in a running Floorbit, point `FLOORBIT_DEV_PLUGINS` at a folder holdin
 
 ## Releasing
 
-Put the new version into `plugin.yaml`, add a `## <version>` section to `CHANGELOG.md`, merge, then
+Run `python scripts/changelog.py collect`, then `mason bump` (it sets the version in `plugin.yaml` and
+turns `[Unreleased]` in `CHANGELOG.md` into its section), merge, then
 push the tag:
 
 ```
